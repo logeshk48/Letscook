@@ -1,0 +1,147 @@
+.about {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  padding-block: clamp(6rem, 14vw, 12rem) clamp(4rem, 8vw, 7rem);
+}
+.ghost {
+  position: absolute;
+  top: clamp(1rem, 3vw, 3rem);
+  left: 50%;
+  font: 900 15vw/0.8 var(--f-display);
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.5);
+  animation: pulse 5s ease-in-out infinite;
+  pointer-events: none;
+  translate: -50% 0;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.35; scale: 1; }
+  50% { opacity: 0.14; scale: 1.02; }
+}
+
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.headline { font: 700 clamp(2.6rem, 6.4vw, 6.6rem)/0.98 var(--f-cond); text-transform: uppercase; }
+.word { display: inline-block; margin-right: 0.22em; }
+
+.bubbleWrap { position: relative; display: grid; justify-items: start; gap: 2rem; }
+.orb { width: 120px; height: 120px; position: relative; }
+.core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, rgba(255, 181, 71, 0.85) 35%, rgba(255, 90, 31, 0) 70%);
+  box-shadow: 0 0 30px 6px rgba(255, 90, 31, 0.45);
+  filter: blur(1.5px);
+}
+.halo {
+  position: absolute;
+  inset: -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 140, 60, 0.35), transparent 60%);
+  filter: blur(10px);
+  animation: glow 2.4s ease-in-out infinite;
+}
+@keyframes glow { 50% { transform: scale(1.2); opacity: 0.85; } }
+
+.bubble {
+  position: relative;
+  background: #fff;
+  color: #000;
+  border-radius: 20px;
+  padding: 1.4rem 1.8rem;
+  font: 700 1.25rem/1.35 var(--f-cond);
+  max-width: 30ch;
+  min-height: 6.2em;
+}
+.bubble::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 40px;
+  border: 12px solid transparent;
+  border-top: 0;
+  border-bottom-color: #fff;
+}
+.bubble :global(.tw-cursor) {
+  display: inline-block;
+  width: 8px;
+  height: 1.1em;
+  background: #000;
+  vertical-align: -0.15em;
+  margin-left: 3px;
+  animation: blink 0.8s steps(1) infinite;
+}
+
+.stats {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: clamp(4rem, 8vw, 7rem);
+  border-top: 1px solid var(--line);
+}
+.stat { padding: 1.8rem 1rem 0 0; display: grid; gap: 0.6rem; }
+.stat + .stat { padding-left: 1.4rem; border-left: 1px solid var(--line); }
+.stat b { font: 900 clamp(2.2rem, 5vw, 4.6rem)/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.stat sup { font-size: 0.45em; color: var(--flame); vertical-align: 0.9em; }
+
+.why {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: clamp(3.5rem, 7vw, 6rem);
+}
+.whyIntro {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.whyIntro h2 { font: 700 clamp(1.8rem, 3.6vw, 3.4rem)/1 var(--f-cond); text-transform: uppercase; max-width: 20ch; margin-top: 1rem; }
+.whyIntro > p { color: var(--fg-2); max-width: 48ch; }
+
+.card {
+  position: relative;
+  border: 1px solid #27272a;
+  border-radius: 20px;
+  padding: 1.6rem;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 0.3s, transform 0.5s var(--ease);
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at var(--px, 50%) var(--py, 50%), rgba(255, 90, 31, 0.16), transparent 55%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.card:hover { border-color: #55575c; transform: translateY(-4px); }
+.card:hover::before { opacity: 1; }
+.key { font: 500 0.72rem/1 var(--f-mono); color: var(--flame); }
+.card h3 { font: 700 1.45rem/1.1 var(--f-cond); text-transform: uppercase; margin: 1.2rem 0 0.7rem; }
+.card p { color: var(--fg-2); font-size: 0.95rem; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .why { grid-template-columns: 1fr 1fr; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat:nth-child(3) { padding-left: 0; border-left: 0; }
+  .stat:nth-child(n + 3) { border-top: 1px solid var(--line); margin-top: 1.6rem; }
+}
+@media (max-width: 560px) {
+  .why { grid-template-columns: 1fr; }
+}

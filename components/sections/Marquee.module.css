@@ -1,0 +1,16 @@
+.marq {
+  background: var(--bg);
+  padding-block: clamp(2rem, 5vw, 4rem);
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  display: grid;
+  gap: 0.4rem;
+}
+.row { display: flex; width: max-content; white-space: nowrap; }
+.row span {
+  font: 900 clamp(2.4rem, 7vw, 7rem)/1.05 var(--f-display);
+  text-transform: uppercase;
+  padding-right: 0.5em;
+}
+.outline span { color: transparent; -webkit-text-stroke: 1.5px rgba(244, 242, 238, 0.55); }
+.row em { font-style: normal; color: var(--flame); -webkit-text-stroke: 0; }

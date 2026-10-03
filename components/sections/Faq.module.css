@@ -1,0 +1,45 @@
+.faq { background: var(--bg); padding-block: clamp(4rem, 9vw, 8rem); }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 5vw, 5rem); }
+.grid h2 { font: 700 clamp(2rem, 4vw, 3.8rem)/1 var(--f-cond); text-transform: uppercase; margin-top: 1rem; }
+
+.qa { border-top: 1px solid var(--line); }
+.qa:last-child { border-bottom: 1px solid var(--line); }
+.qa button {
+  all: unset;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  font: 700 clamp(1.15rem, 2vw, 1.7rem)/1.2 var(--f-cond);
+  text-transform: uppercase;
+  transition: color 0.3s, padding 0.4s var(--ease);
+}
+.qa button:hover { color: var(--flame); padding-left: 10px; }
+.qa button:focus-visible { outline: 2px solid var(--flame); }
+
+.pm { position: relative; width: 18px; height: 18px; flex-shrink: 0; }
+.pm::before, .pm::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.5s var(--ease);
+}
+.pm::after { transform: rotate(90deg); }
+.open .pm::after { transform: rotate(0); }
+
+.ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s var(--ease); }
+.open .ans { grid-template-rows: 1fr; }
+.ans > div { overflow: hidden; }
+.ans p { color: var(--fg-2); padding: 0 0 1.6rem; max-width: 62ch; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}

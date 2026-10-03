@@ -1,0 +1,23 @@
+.dot, .ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 19000;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+.dot { width: 8px; height: 8px; background: #fff; }
+.ring {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: width 0.3s var(--ease), height 0.3s var(--ease), background 0.3s;
+}
+.big { width: 84px; height: 84px; background: rgba(255, 255, 255, 0.12); }
+
+@media (hover: hover) and (pointer: fine) {
+  .dot, .ring { display: block; }
+}

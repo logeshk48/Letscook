@@ -1,0 +1,83 @@
+.hero {
+  position: sticky; /* stays put while .stack slides over it */
+  top: 0;
+  height: 100svh;
+  min-height: 600px;
+  overflow: hidden;
+  perspective: 1200px;
+  z-index: 0;
+  background: #0b0c0d;
+}
+
+/* kitchen-tile wall lit by a pointer spotlight */
+.inner {
+  --mx: 50%;
+  --my: 40%;
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 6rem var(--gut) 2.5rem;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.6) 2px, transparent 2px) 0 0 / 76px 76px,
+    linear-gradient(90deg, rgba(0, 0, 0, 0.6) 2px, transparent 2px) 0 0 / 76px 76px,
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%) 0 0 / 76px 76px,
+    radial-gradient(ellipse 55% 60% at var(--mx) var(--my), #3d4046, #1b1d20 50%, #0b0c0d 85%);
+}
+.inner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(8, 9, 10, 0.92));
+  pointer-events: none;
+}
+.inner > * { position: relative; z-index: 2; }
+
+.eyebrow {
+  font: 700 0.85rem/1 var(--f-cond);
+  letter-spacing: 0.5em;
+  color: var(--fg-2);
+  margin-bottom: 1rem;
+}
+.title { display: grid; justify-items: center; }
+.build {
+  font: 700 clamp(7rem, 23vw, 24rem)/0.82 var(--f-cond);
+  letter-spacing: 0.03em;
+  color: #0e0f11;
+  -webkit-text-stroke: 1px #3a3d42;
+  text-shadow: 4px 4px 0 #2b2e33, 8px 8px 0 #4b4f55, 12px 12px 0 #7a7e85, 0 0 60px rgba(0, 0, 0, 0.4);
+}
+.beyond {
+  font: 900 clamp(1.7rem, 6.6vw, 7.2rem)/0.95 var(--f-display);
+  color: #fff;
+  white-space: nowrap;
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.65);
+}
+.buildLine { padding: 0 14px 14px 0; } /* room for the stacked shadow */
+.beyondLine { font-size: clamp(1.7rem, 6.6vw, 7.2rem); margin-top: -0.55em; padding-top: 0.1em; }
+.copy { max-width: 46ch; color: var(--fg-2); margin-top: 2rem; font-size: clamp(0.95rem, 1.2vw, 1.1rem); }
+.cta { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1.8rem; }
+
+.audience {
+  position: absolute !important;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font: 700 0.78rem/1 var(--f-cond);
+  letter-spacing: 0.35em;
+  color: var(--fg-3);
+}
+.audience b { color: var(--flame); font-weight: 700; }
+
+@media (max-width: 560px) {
+  .build { text-shadow: 2px 2px 0 #2b2e33, 4px 4px 0 #4b4f55, 6px 6px 0 #7a7e85; }
+  .audience { justify-content: center; letter-spacing: 0.25em; }
+}

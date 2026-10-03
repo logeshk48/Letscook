@@ -1,0 +1,25 @@
+.ink { position: relative; height: 200svh; background: var(--bg); }
+.stick { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; place-items: center; }
+.layer {
+  position: absolute;
+  inset: 0;
+  background: var(--flame);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2rem;
+  text-align: center;
+  padding-inline: var(--gut);
+  clip-path: circle(75% at 50% 50%); /* JS shrinks this to a dot, then grows it on scroll */
+}
+.layer :global(.label) { color: rgba(14, 15, 17, 0.7); }
+.layer h2 { font: 900 clamp(2.2rem, 8vw, 8.4rem)/0.92 var(--f-display); text-transform: uppercase; }
+.layer > p:not(:global(.label)) { max-width: 50ch; font-size: 1.05rem; }
+.hint {
+  position: absolute;
+  bottom: 2rem;
+  font: 700 0.75rem/1 var(--f-cond);
+  letter-spacing: 0.4em;
+  color: var(--fg-3);
+}

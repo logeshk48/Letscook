@@ -1,42 +1,149 @@
+/* ============ Design tokens ============ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #0e0f11;
+  --bg-2: #08090a;
+  --surface: #16181b;
+  --line: #2a2d32;
+  --fg: #f4f2ee;
+  --fg-2: rgba(244, 242, 238, 0.68);
+  --fg-3: rgba(244, 242, 238, 0.4);
+  --paper: #efede8;
+  --ink: #0e0f11;
+  --ink-2: #55585e;
+  --flame: #ff5a1f;
+  --flame-2: #ffb547;
+  --brand: #16375a;
+  --wa: #25d366;
+
+  --f-display: "Unbounded", "Arial Black", Impact, sans-serif;
+  --f-cond: "Antonio", "Oswald", "Arial Narrow", sans-serif;
+  --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+  --gut: clamp(16px, 5vw, 72px);
+  --logo: url("/brand/logo-mark.png");
+
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
+/* ============ Base ============ */
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg); }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/1.6 var(--f-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1, h2, h3, p, figure, blockquote { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+::selection { background: var(--flame); color: var(--ink); }
+:focus-visible { outline: 2px solid var(--flame); outline-offset: 3px; }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-2); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#fff, #b0b0b0 30%, #333 50%, #555 51%, #888);
+  border-radius: 5px;
+  border: 2px solid var(--bg-2);
 }
 
-a {
-  color: inherit;
+/* ============ Utilities ============ */
+.wrap { padding-inline: var(--gut); }
+.label {
+  font: 700 0.8rem/1 var(--f-cond);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+/* metallic text — put it on the element that holds the text (not a parent of transformed spans) */
+.chrome {
+  background: linear-gradient(180deg, #fff 0%, #a8a8a8 44%, #151515 50%, #454545 50.1%, #d4d4d4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* masked line for slide-up reveals: <span class="line"><span>Text</span></span> */
+.line { display: block; overflow: hidden; padding-bottom: 0.04em; }
+.line > span { display: block; }
+
+/* ============ Buttons ============ */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1.05rem 1.7rem;
+  font: 700 0.9rem/1 var(--f-cond);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  background: rgba(8, 9, 10, 0.4);
+  overflow: hidden;
+  cursor: pointer;
+  isolation: isolate;
+  transition: border-color 0.3s, color 0.3s;
 }
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform: translateY(101%);
+  transition: transform 0.5s var(--ease-io);
+  z-index: -1;
+}
+.btn:hover { color: var(--ink); border-color: #fff; }
+.btn:hover::before { transform: none; }
+.btn--solid { background: var(--flame); border-color: var(--flame); color: var(--ink); }
+.btn--ink { border-color: var(--ink); color: var(--ink); background: transparent; }
+.btn--ink::before { background: var(--ink); }
+.btn--ink:hover { color: var(--flame); }
+.btn .arr { transition: transform 0.4s var(--ease); }
+.btn:hover .arr { transform: rotate(-45deg); }
+.btn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wa); box-shadow: 0 0 10px var(--wa); }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* ============ Grain overlay ============ */
+.grain {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 0.5s steps(4) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -1%); }
+  100% { transform: translate(1%, 3%); }
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Content that scrolls over the sticky hero */
+.stack { position: relative; z-index: 1; background: var(--bg); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
