@@ -1,16 +1,23 @@
 /* ============ Design tokens ============ */
 :root {
-  --bg: #0e0f11;
-  --bg-2: #08090a;
-  --surface: #16181b;
-  --line: #2a2d32;
-  --fg: #f4f2ee;
-  --fg-2: rgba(244, 242, 238, 0.68);
-  --fg-3: rgba(244, 242, 238, 0.4);
-  --paper: #efede8;
-  --ink: #0e0f11;
-  --ink-2: #55585e;
-  --flame: #ff5a1f;
+  /* dark base, tinted toward your logo blue */
+  --bg: #0b0f15;
+  --bg-2: #070a0f;
+  --surface: #111821;
+  --line: #22303f;
+  --fg: #f2f4f7;
+  --fg-2: rgba(242, 244, 247, 0.68);
+  --fg-3: rgba(242, 244, 247, 0.42);
+
+  /* light sections (recipe, work) */
+  --paper: #edf0f4;
+  --ink: #0b1220;
+  --ink-2: #4f5a6a;
+
+  /* brand */
+  --blue: #16375a;   /* logo blue: panels, borders, glows */
+  --blue-2: #4d8bd1; /* bright blue: highlights, links, labels */
+  --flame: #ff5a1f;  /* orange: buttons and calls to action */
   --flame-2: #ffb547;
   --brand: #16375a;
   --wa: #25d366;
@@ -48,12 +55,12 @@ h1, h2, h3 { text-wrap: balance; }
 a { color: inherit; }
 img { max-width: 100%; display: block; }
 ::selection { background: var(--flame); color: var(--ink); }
-:focus-visible { outline: 2px solid var(--flame); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--blue-2); outline-offset: 3px; }
 
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg-2); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(#fff, #b0b0b0 30%, #333 50%, #555 51%, #888);
+  background: linear-gradient(#fff, #a9c4e4 30%, #16375a 50%, #2a5280 51%, #8fb3dd);
   border-radius: 5px;
   border: 2px solid var(--bg-2);
 }
@@ -91,7 +98,7 @@ img { max-width: 100%; display: block; }
   text-decoration: none;
   border: 1px solid rgba(255, 255, 255, 0.35);
   color: #fff;
-  background: rgba(8, 9, 10, 0.4);
+  background: rgba(7, 10, 15, 0.45);
   overflow: hidden;
   cursor: pointer;
   isolation: isolate;
