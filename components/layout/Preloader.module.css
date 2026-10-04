@@ -1,46 +1,173 @@
-.preloader {
+/* Full-screen motion sequence: HUD corners, logo in a progress ring, word ticker, panel-wipe exit. */
+.root {
   position: fixed;
   inset: 0;
   z-index: 20000;
-  background: #000;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  gap: 2.5rem;
+  pointer-events: none;
   /* safety net: if JavaScript never runs, get out of the way */
-  animation: fallback 0s 5s forwards;
+  animation: fallback 0s 6s forwards;
 }
 @keyframes fallback { to { visibility: hidden; opacity: 0; } }
 
-.cols {
+.screen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg-2);
+  pointer-events: auto;
+}
+
+/* blueprint grid, faded toward the edges */
+.grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 64px 64px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 64px 64px;
+  -webkit-mask: radial-gradient(circle at 50% 50%, #000 0, transparent 65%);
+  mask: radial-gradient(circle at 50% 50%, #000 0, transparent 65%);
+}
+.scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue-2), transparent);
+  transform: scaleX(0);
+}
+
+/* corner HUD */
+.hud {
+  position: absolute;
+  font: 500 0.72rem/1.4 var(--f-mono);
+  letter-spacing: 0.12em;
+  color: var(--fg-3);
+  text-transform: uppercase;
+  opacity: 0;
+}
+.hud b { color: var(--fg); font-weight: 500; }
+.tl { top: 24px; left: 24px; }
+.tr { top: 24px; right: 24px; text-align: right; }
+.bl { bottom: 20px; left: 24px; }
+.br { bottom: 24px; right: 24px; text-align: right; }
+.count {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.15em;
+  font: 900 clamp(3.4rem, 9vw, 7rem)/0.85 var(--f-display);
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.count small { font: 500 0.75rem/1 var(--f-mono); color: var(--flame); letter-spacing: 0.15em; margin-bottom: 0.6em; }
+
+.bar { position: absolute; left: 24px; right: 24px; bottom: 0; height: 3px; background: #141c27; }
+.bar i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-2), var(--flame));
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* centre stage */
+.stage {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  pointer-events: none;
+  place-items: center;
+  align-content: center;
+  gap: clamp(1.6rem, 4vh, 2.6rem);
 }
-.cols i { border-right: 1px solid #141414; }
+.emblem { position: relative; width: min(46vw, 230px); aspect-ratio: 1; opacity: 0; }
+.emblem svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.track { fill: none; stroke: #18222f; stroke-width: 2; }
+.ring { fill: none; stroke: url(#lc-ring); stroke-width: 3; stroke-linecap: round; }
+.dash { fill: none; stroke: var(--blue-2); stroke-width: 1; stroke-dasharray: 2 9; opacity: 0.6; }
+.orbit { fill: var(--flame); }
 
-.logo { position: relative; width: min(34vw, 150px); aspect-ratio: 112 / 109; }
+.logo { position: absolute; inset: 22%; }
 .logo span {
   position: absolute;
   inset: 0;
   -webkit-mask: var(--logo) center / contain no-repeat;
   mask: var(--logo) center / contain no-repeat;
 }
-.ghost { background: #2e2e2e; }
+.ghost { background: #1c2836; }
 .fill {
-  background: linear-gradient(0deg, var(--flame), #fff 60%);
+  background: linear-gradient(0deg, var(--blue-2) 0%, #9cc3ee 40%, #fff 70%);
   clip-path: inset(100% 0 0 0);
 }
-
-.count {
-  position: relative;
-  font: 300 1.5rem/1 var(--f-cond);
-  letter-spacing: 0.1em;
-  font-variant-numeric: tabular-nums;
+.steam {
+  position: absolute;
+  left: 50%;
+  top: 13%;
+  width: 40%;
+  height: 22%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.steam i {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cfe0f5;
+  filter: blur(2px);
+  opacity: 0;
 }
 
+/* word ticker */
+.ticker {
+  position: relative;
+  height: clamp(2.2rem, 6vw, 3.6rem);
+  min-width: min(90vw, 560px);
+  overflow: hidden;
+  text-align: center;
+}
+.word {
+  position: absolute;
+  inset: 0;
+  font: 900 clamp(1.6rem, 5vw, 3rem)/1.15 var(--f-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  /* no CSS transform here: GSAP owns the movement */
+}
+.outline { color: transparent; -webkit-text-stroke: 1.5px var(--fg); }
+.solid { color: var(--fg); }
+.hot { color: var(--flame); }
+.step { font: 500 0.72rem/1 var(--f-mono); letter-spacing: 0.3em; color: var(--fg-3); text-align: center; }
+.step b { color: var(--blue-2); font-weight: 500; }
+
+/* finale */
+.burst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--flame);
+  border-radius: 50%;
+  opacity: 0;
+}
+.flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+
+/* exit panels */
+.panels { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(4, 1fr); }
+.panels i { display: block; height: 100%; transform: scaleY(0); }
+.panels i:nth-child(1) { background: var(--flame); }
+.panels i:nth-child(2) { background: var(--blue-2); }
+.panels i:nth-child(3) { background: var(--blue); }
+.panels i:nth-child(4) { background: #0d1520; }
+
+@media (max-width: 560px) {
+  .tr, .br { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .preloader { display: none; }
+  .root { display: none; }
 }
