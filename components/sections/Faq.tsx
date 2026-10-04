@@ -14,7 +14,7 @@ export default function Faq() {
   };
 
   return (
-    <section className={s.faq}>
+    <section id="faq" className={s.faq}>
       <div className={`wrap ${s.grid}`}>
         <div>
           <p className="label">GOOD TO KNOW</p>

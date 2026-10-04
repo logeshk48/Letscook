@@ -1,130 +1,161 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap, useGSAP, ScrollTrigger } from "@/lib/gsap";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useApp } from "@/components/providers/AppProvider";
-import { navLinks, site } from "@/content/site";
+import { whatsappLink } from "@/content/site";
 import s from "./Nav.module.css";
 
+/** Sections the nav links to. `id` must match the section's id on the page. */
+const LINKS = [
+  { id: "services", label: "Services" },
+  { id: "recipe", label: "Process" },
+  { id: "work", label: "Work" },
+  { id: "about", label: "About" },
+  { id: "faq", label: "FAQ" },
+];
+
+/** Floating glass "island" nav. Top-centre on desktop, docked at the bottom on phones. */
 export default function Nav() {
-  const root = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
   const { scrollTo, stopScroll, startScroll } = useApp();
+  const linksRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLSpanElement>(null);
+  const [active, setActive] = useState<string | null>(null);
+  const [hidden, setHidden] = useState(false);
+  const [solid, setSolid] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  const { contextSafe } = useGSAP({ scope: root });
-
-  const openMenu = contextSafe(() => {
-    setOpen(true);
-    stopScroll();
-    gsap
-      .timeline()
-      .set(`.${s.menu}`, { visibility: "visible" })
-      .to(`.${s.menu}`, { clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "expo.inOut" })
-      .fromTo(`.${s.link}`, { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.7, ease: "expo.out" }, "-=0.35")
-      .fromTo(`.${s.artLogo}`, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 0.9, duration: 0.9, ease: "expo.out" }, "<");
-  });
-
-  const closeMenu = contextSafe((instant = false) => {
-    setOpen(false);
-    const done = () => {
-      gsap.set(`.${s.menu}`, { visibility: "hidden" });
-      startScroll();
-    };
-    if (instant) {
-      gsap.set(`.${s.menu}`, { clipPath: "inset(0 0 100% 0)" });
-      done();
-    } else {
-      gsap.to(`.${s.menu}`, { clipPath: "inset(0 0 100% 0)", duration: 0.7, ease: "expo.inOut", onComplete: done });
+  // Slide the glass pill under a link (or hide it).
+  const movePill = useCallback((id: string | null) => {
+    const pill = pillRef.current;
+    const link = id ? linksRef.current?.querySelector<HTMLElement>(`[data-id="${id}"]`) : null;
+    if (!pill) return;
+    if (!link) {
+      pill.style.opacity = "0";
+      return;
     }
-  });
+    pill.style.opacity = "1";
+    pill.style.left = `${link.offsetLeft}px`;
+    pill.style.width = `${link.offsetWidth}px`;
+  }, []);
 
-  // Full-screen "loading the section" transition used by menu links.
-  const goToSection = contextSafe((id: string, label: string) => {
-    gsap
-      .timeline()
-      .set(`.${s.trans}`, { visibility: "visible", clipPath: "inset(100% 0 0 0)" })
-      .set(`.${s.barFill}`, { width: "0%" })
-      .call(() => {
-        const el = root.current?.querySelector<HTMLElement>(`.${s.transLabel}`);
-        if (el) el.textContent = label;
-      })
-      .to(`.${s.trans}`, { clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "expo.inOut" })
-      .from(`.${s.transLabel}`, { yPercent: 60, opacity: 0, duration: 0.5, ease: "expo.out" }, "-=0.2")
-      .to(`.${s.barFill}`, { width: "100%", duration: 0.7, ease: "power2.inOut" })
-      .call(() => {
-        closeMenu(true);
-        scrollTo(id, { immediate: true });
-        ScrollTrigger.update();
-      })
-      .to(`.${s.trans}`, { clipPath: "inset(0 0 100% 0)", duration: 0.7, ease: "expo.inOut" }, "+=0.1")
-      .set(`.${s.trans}`, { visibility: "hidden" });
-  });
+  useEffect(() => movePill(active), [active, movePill]);
 
+  // Which section is in the middle of the screen?
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && open && closeMenu();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          const id = e.target.id;
+          setActive(LINKS.some((l) => l.id === id) ? id : null);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" }
+    );
+    ["top", ...LINKS.map((l) => l.id), "contact"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
+  }, []);
+
+  // Hide while scrolling down, show again when scrolling up.
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setSolid(y > 40);
+      setHidden(y > lastY && y > 240);
+      lastY = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Phone menu: lock page scroll while open, close on Esc.
+  useEffect(() => {
+    if (!open) return;
+    stopScroll();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, closeMenu]);
+    return () => {
+      startScroll();
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, stopScroll, startScroll]);
+
+  const go = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setOpen(false);
+    startScroll(); // unlock first (the phone menu locks scrolling)
+    scrollTo(id);
+  };
 
   return (
-    <div ref={root}>
-      <header className={s.nav}>
-        <a
-          href="#top"
-          className={s.logo}
-          aria-label={`${site.name} home`}
-          onClick={(e) => {
-            e.preventDefault();
-            scrollTo("top");
-          }}
-        />
-        <button
-          className={`${s.burger} ${open ? s.isOpen : ""}`}
-          aria-expanded={open}
-          aria-controls="site-menu"
-          onClick={() => (open ? closeMenu() : openMenu())}
-        >
-          <span className={s.burgerText}>{open ? "CLOSE" : "MENU"}</span>
-          <span className={s.bars}>
-            <i />
-            <i />
-          </span>
-        </button>
-      </header>
+    <>
+      <header className={`${s.island} ${hidden && !open ? s.hide : ""} ${solid ? s.solid : ""}`}>
+        <a href="#top" className={s.brand} onClick={go("top")} aria-label="Let's cook Technologies, back to top">
+          <i className={s.icon} aria-hidden="true" />
+          <b>
+            Let&apos;s <span>cook</span>
+          </b>
+        </a>
 
-      <nav id="site-menu" className={s.menu} aria-label="Main" aria-hidden={!open}>
-        <div className={s.links}>
-          {navLinks.map((l, i) => (
+        <nav ref={linksRef} className={s.links} aria-label="Main" onMouseLeave={() => movePill(active)}>
+          <span ref={pillRef} className={s.pill} aria-hidden="true" />
+          {LINKS.map((l) => (
             <a
               key={l.id}
               href={`#${l.id}`}
-              className={s.link}
-              tabIndex={open ? 0 : -1}
-              onClick={(e) => {
-                e.preventDefault();
-                goToSection(l.id, l.label);
-              }}
+              data-id={l.id}
+              className={active === l.id ? s.on : ""}
+              aria-current={active === l.id ? "true" : undefined}
+              onMouseEnter={() => movePill(l.id)}
+              onClick={go(l.id)}
             >
-              <small>{String(i + 1).padStart(2, "0")}</small>
               {l.label}
             </a>
           ))}
-        </div>
-        <div className={s.art}>
-          <div className={s.artLogo} />
-          <div className={s.artMeta}>
-            <span>{site.location.toUpperCase()}</span>
-            <span>{site.phoneDisplay}</span>
-          </div>
-        </div>
-      </nav>
+        </nav>
 
-      <div className={s.trans} aria-hidden="true">
-        <div className={s.transLabel}>Home</div>
-        <div className={s.bar}>
-          <i className={s.barFill} />
+        <span className={s.status}>Available</span>
+
+        <a href="#contact" className={s.cta} onClick={go("contact")}>
+          Start a project <span className={s.arr} aria-hidden="true">↗</span>
+        </a>
+
+        <button
+          className={s.burger}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen((o) => !o)}
+        >
+          <span className={open ? s.x : ""} />
+        </button>
+      </header>
+
+      {/* phone menu: slide-up sheet */}
+      <div className={`${s.scrim} ${open ? s.show : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
+      <div id="mobile-menu" className={`${s.sheet} ${open ? s.show : ""}`} role="dialog" aria-label="Menu" aria-hidden={!open}>
+        <div className={s.grab} aria-hidden="true" />
+        <nav className={s.sheetLinks}>
+          {LINKS.map((l, i) => (
+            <a key={l.id} href={`#${l.id}`} className={active === l.id ? s.on : ""} tabIndex={open ? 0 : -1} onClick={go(l.id)}>
+              {l.label}
+              <small>{String(i + 1).padStart(2, "0")}</small>
+            </a>
+          ))}
+        </nav>
+        <div className={s.chips}>
+          <a className={s.chip} href={whatsappLink()} target="_blank" rel="noopener noreferrer" tabIndex={open ? 0 : -1}>
+            WhatsApp
+          </a>
+          <a className={`${s.chip} ${s.chipMain}`} href="#contact" tabIndex={open ? 0 : -1} onClick={go("contact")}>
+            Start a project ↗
+          </a>
         </div>
       </div>
-    </div>
+    </>
   );
 }
