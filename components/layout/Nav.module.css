@@ -2,8 +2,8 @@
 .glass {
   background: rgba(12, 17, 25, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
@@ -175,9 +175,7 @@
   position: fixed;
   inset: 0;
   z-index: 9998;
-  background: rgba(3, 6, 10, 0.45);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  background: rgba(3, 6, 10, 0.55);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s;
@@ -196,8 +194,8 @@
   padding: 10px;
   border-radius: 26px;
   background: rgba(13, 19, 28, 0.94);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   transform-origin: top right;
   opacity: 0;
   scale: 0.96;

@@ -62,7 +62,6 @@ export default function Services() {
       ref={root}
       id="services"
       className={s.cook}
-      onPointerMove={(e) => e.currentTarget.style.setProperty("--sx", `${(e.clientX / window.innerWidth) * 100}%`)}
     >
       <div className="wrap">
         <header className={s.head}>

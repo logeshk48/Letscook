@@ -11,31 +11,55 @@
 
 /* kitchen-tile wall lit by a pointer spotlight */
 .inner {
-  --mx: 50%;
-  --my: 40%;
   position: absolute;
   inset: 0;
+  overflow: hidden;
   transform-origin: 50% 100%;
+  will-change: transform, opacity;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 6rem var(--gut) 2.5rem;
+  background: #0b0c0d;
+}
+/* the light: a soft glow under the tiles, moved by JS with transform only */
+.inner > .light {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  top: 0;
+  width: 110vmax;
+  height: 110vmax;
+  margin: -55vmax 0 0 -55vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, #3d4046 0%, #1b1d20 30%, rgba(11, 12, 13, 0) 55%);
+  transform: translate3d(50vw, 40vh, 0);
+  will-change: transform;
+  pointer-events: none;
+}
+/* tile grout lines on top of the light */
+.inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   background:
     linear-gradient(rgba(0, 0, 0, 0.6) 2px, transparent 2px) 0 0 / 76px 76px,
     linear-gradient(90deg, rgba(0, 0, 0, 0.6) 2px, transparent 2px) 0 0 / 76px 76px,
-    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%) 0 0 / 76px 76px,
-    radial-gradient(ellipse 55% 60% at var(--mx) var(--my), #3d4046, #1b1d20 50%, #0b0c0d 85%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%) 0 0 / 76px 76px;
+  pointer-events: none;
 }
 .inner::after {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(180deg, transparent 55%, rgba(8, 9, 10, 0.92));
   pointer-events: none;
 }
-.inner > * { position: relative; z-index: 2; }
+.inner > *:not(.light) { position: relative; z-index: 2; }
 
 .eyebrow {
   font: 700 0.85rem/1 var(--f-cond);

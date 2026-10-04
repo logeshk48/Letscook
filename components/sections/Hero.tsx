@@ -10,6 +10,8 @@ import s from "./Hero.module.css";
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const inner = useRef<HTMLDivElement>(null);
+  const light = useRef<HTMLDivElement>(null);
+  const frame = useRef(0);
   const { introDone, scrollTo } = useApp();
 
   // 1) Intro: slide the headline up once the preloader is done.
@@ -40,15 +42,22 @@ export default function Hero() {
   );
 
   // 3) Spotlight follows the pointer across the tile wall.
+  //    Moved with transform (GPU only), at most once per frame.
   const onMove = (e: React.PointerEvent) => {
-    const r = inner.current!.getBoundingClientRect();
-    inner.current!.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
-    inner.current!.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+    if (frame.current) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    frame.current = requestAnimationFrame(() => {
+      frame.current = 0;
+      const r = inner.current!.getBoundingClientRect();
+      light.current!.style.transform = `translate3d(${x - r.left}px, ${y - r.top}px, 0)`;
+    });
   };
 
   return (
     <section ref={root} className={s.hero} aria-label="Intro" onPointerMove={onMove}>
       <div ref={inner} className={s.inner}>
+        <div ref={light} className={s.light} aria-hidden="true" />
         <p className={`${s.eyebrow} line`} data-reveal>
           <span>{site.name.toUpperCase()}</span>
         </p>

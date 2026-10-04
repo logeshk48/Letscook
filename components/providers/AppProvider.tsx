@@ -29,7 +29,7 @@ export default function AppProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
-    const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
+    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
     lenisRef.current = lenis;
 
     lenis.on("scroll", (e: Lenis) => {

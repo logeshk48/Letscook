@@ -1,23 +1,76 @@
-.dot, .ring {
+/* Hidden until JavaScript confirms a mouse/trackpad */
+.dot, .glow {
   position: fixed;
   left: 0;
   top: 0;
-  border-radius: 50%;
   pointer-events: none;
-  z-index: 19000;
-  mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
   display: none;
+  will-change: transform;
+  contain: layout style;
 }
-.dot { width: 8px; height: 8px; background: #fff; }
-.ring {
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  transition: width 0.3s var(--ease), height 0.3s var(--ease), background 0.3s;
-}
-.big { width: 84px; height: 84px; background: rgba(255, 255, 255, 0.12); }
 
-@media (hover: hover) and (pointer: fine) {
-  .dot, .ring { display: block; }
+/* class added to <html> when the custom cursor is active */
+.hasCursor .dot, .hasCursor .glow { display: block; }
+.hasCursor, .hasCursor * { cursor: none !important; }
+.hasCursor input, .hasCursor textarea, .hasCursor select, .hasCursor [contenteditable="true"] { cursor: text !important; }
+.hasCursor select { cursor: pointer !important; }
+.away .dot, .away .glow { opacity: 0 !important; }
+
+/* ---------- orange dot ---------- */
+.dot {
+  z-index: 19001;
+  width: 0;
+  height: 0;
 }
+.dot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--flame);
+  box-shadow: 0 0 12px 2px rgba(255, 90, 31, 0.65);
+  translate: -50% -50%;
+  transition: width 0.35s var(--ease), height 0.35s var(--ease), background 0.35s, box-shadow 0.35s, border-color 0.35s, scale 0.2s;
+  border: 1.5px solid transparent;
+}
+/* over links & buttons: opens into a ring */
+.link::before {
+  width: 42px;
+  height: 42px;
+  background: rgba(255, 90, 31, 0.12);
+  border-color: var(--flame);
+  box-shadow: 0 0 22px rgba(255, 90, 31, 0.35);
+}
+/* over project cards: a bigger ring */
+.big::before {
+  width: 84px;
+  height: 84px;
+  background: rgba(255, 90, 31, 0.1);
+  border-color: rgba(255, 90, 31, 0.8);
+  box-shadow: 0 0 34px rgba(255, 90, 31, 0.3);
+}
+.press::before { scale: 0.8; }
+.hide::before { width: 0; height: 0; box-shadow: none; }
+
+/* ---------- soft light ---------- */
+.glow {
+  z-index: 8999; /* under the grain overlay, above page content */
+  width: 0;
+  height: 0;
+}
+.glow::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  translate: -50% -50%;
+  background: radial-gradient(circle, rgba(255, 90, 31, 0.24) 0%, rgba(255, 90, 31, 0.09) 35%, transparent 68%);
+  transition: width 0.6s var(--ease), height 0.6s var(--ease), opacity 0.4s;
+}
+.hot::before { width: 520px; height: 520px; }

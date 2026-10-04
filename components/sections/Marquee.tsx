@@ -18,12 +18,16 @@ export default function Marquee() {
       const tweens = rows.map((row, i) =>
         gsap.fromTo(row, { xPercent: i % 2 ? -50 : 0 }, { xPercent: i % 2 ? 0 : -50, duration: 38, ease: "none", repeat: -1 })
       );
+      // speed follows scroll velocity, then eases back to normal
+      const speed = { v: 1 };
+      const apply = () => tweens.forEach((t) => t.timeScale(speed.v));
       let settle: gsap.core.Tween | null = null;
       const off = onScrollVelocity((v) => {
-        const speed = 1 + Math.min(Math.abs(v) / 6, 5);
-        tweens.forEach((t) => gsap.to(t, { timeScale: speed, duration: 0.3, overwrite: true }));
+        const target = 1 + Math.min(Math.abs(v) / 6, 5);
+        if (target <= speed.v + 0.05) return; // ignore tiny changes
+        gsap.to(speed, { v: target, duration: 0.3, overwrite: true, onUpdate: apply });
         settle?.kill();
-        settle = gsap.delayedCall(0.4, () => tweens.forEach((t) => gsap.to(t, { timeScale: 1, duration: 1.2 })));
+        settle = gsap.to(speed, { v: 1, duration: 1.2, delay: 0.4, onUpdate: apply });
       });
       return () => off();
     },
