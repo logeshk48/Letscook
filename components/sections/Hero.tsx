@@ -110,7 +110,7 @@ export default function Hero() {
   };
 
   return (
-    <section ref={root} className={s.hero} aria-label="Intro">
+    <section ref={root} className={s.hero} aria-label="Intro" data-nav-tone="orange">
       {/* orange typography wall */}
       <div className={s.wall} data-wall aria-hidden="true">
         {Array.from({ length: ROWS }, (_, i) => (

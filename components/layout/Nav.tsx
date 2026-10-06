@@ -27,6 +27,7 @@ export default function Nav() {
   const [active, setActive] = useState<string | null>(null);
   const [condensed, setCondensed] = useState(false);
   const [open, setOpen] = useState(false);
+  const [tone, setTone] = useState<"dark" | "orange" | "light">("dark");
 
   // Slide the glass highlight under a link (or hide it).
   const movePill = useCallback((id: string | null) => {
@@ -71,6 +72,49 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Match the bar to what is behind it: orange hero, light paper sections, or dark sections.
+  useEffect(() => {
+    let raf = 0;
+    let last = 0;
+    const read = () => {
+      raf = 0;
+      last = performance.now();
+      const y = 40; // middle of the bar
+      const hits = document.elementsFromPoint(window.innerWidth / 2, y);
+      for (const el of hits) {
+        if (el.closest("header") || getComputedStyle(el).position === "fixed") continue;
+        // walk up to the first element that sets a tone or paints a background
+        let node: HTMLElement | null = el as HTMLElement;
+        while (node && node !== document.body) {
+          const forced = node.dataset.navTone as typeof tone | undefined;
+          if (forced) return setTone(forced);
+          const bg = getComputedStyle(node).backgroundColor;
+          const m = bg.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/);
+          if (m && (m[4] === undefined || parseFloat(m[4]) > 0.5)) {
+            const lum = (0.2126 * +m[1] + 0.7152 * +m[2] + 0.0722 * +m[3]) / 255;
+            return setTone(lum > 0.6 ? "light" : "dark");
+          }
+          node = node.parentElement;
+        }
+      }
+      setTone("dark");
+    };
+    const onScroll = () => {
+      if (raf) return;
+      // at most ~10 checks a second while scrolling
+      const wait = Math.max(0, 100 - (performance.now() - last));
+      raf = window.setTimeout(() => requestAnimationFrame(read), wait) as unknown as number;
+    };
+    read();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.clearTimeout(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   // Menu open: lock page scroll, close on Esc.
   useEffect(() => {
     if (!open) return;
@@ -92,7 +136,7 @@ export default function Nav() {
 
   return (
     <>
-      <header className={`${s.bar} ${condensed ? s.condensed : ""} ${open ? s.isOpen : ""}`}>
+      <header className={`${s.bar} ${condensed ? s.condensed : ""} ${open ? s.isOpen : ""} ${!open && tone !== "dark" ? s[tone] : ""}`}>
         {/* left: logo */}
         <a href="#top" className={`${s.brand} ${s.glass}`} onClick={go("top")} aria-label="Let's cook Technologies, back to top">
           <i className={s.icon} aria-hidden="true" />

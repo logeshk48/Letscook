@@ -170,6 +170,33 @@
 }
 .cta:hover .arr { transform: rotate(45deg); }
 
+/* ---------- tones: the bar adapts to what is behind it ---------- */
+/* on the orange hero: solid navy pills */
+.orange .glass {
+  background: rgba(11, 26, 46, 0.92);
+  border-color: rgba(11, 26, 46, 0.9);
+  box-shadow: 0 8px 24px rgba(120, 30, 0, 0.25);
+}
+.orange .links a { color: rgba(255, 255, 255, 0.72); }
+.orange .links a:hover, .orange .links a.on { color: #fff; }
+
+/* on light sections: white pills, dark text */
+.light .glass {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(11, 18, 32, 0.08);
+  box-shadow: 0 8px 26px rgba(11, 18, 32, 0.1), inset 0 1px 0 #fff;
+}
+.light .brand { background: var(--ink); border-color: var(--ink); } /* white logo needs a dark circle */
+.light .links a { color: var(--ink-2); }
+.light .links a:hover, .light .links a.on { color: var(--ink); }
+.light .pill { background: rgba(11, 18, 32, 0.06); box-shadow: inset 0 0 0 1px rgba(11, 18, 32, 0.06); }
+.light .menuBtn { color: var(--ink); }
+.light .menuIcon { background: var(--ink); }
+.light .menuIcon i { background: #fff; }
+.light .cta { background: var(--ink); color: #fff; box-shadow: 0 8px 24px rgba(11, 18, 32, 0.18); }
+.light .cta:hover { background: var(--flame); }
+.light .arr { background: #fff; color: var(--ink); }
+
 /* ---------- big menu panel ---------- */
 .scrim {
   position: fixed;
