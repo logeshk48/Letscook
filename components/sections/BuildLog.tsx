@@ -56,8 +56,18 @@ export default function BuildLog() {
       <i className={`${s.corner} ${s.tr}`} />
       <i className={`${s.corner} ${s.bl}`} />
       <i className={`${s.corner} ${s.br}`} />
-      <span className={s.rec}>● ON THE STOVE</span>
-      <span className={s.monMeta}>kitchen.log</span>
+
+      {/* window bar */}
+      <div className={s.bar}>
+        <span className={s.dots} aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span className={s.monMeta}>kitchen.log</span>
+        <span className={s.rec}>● ON THE STOVE</span>
+      </div>
+
       <div ref={ref} className={s.term}>
         {buildLog.map((l, i) =>
           typed[i] ? (

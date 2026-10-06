@@ -3,17 +3,26 @@
 import { useRef, useState } from "react";
 import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import { scramble } from "@/lib/effects";
-import { services } from "@/content/site";
+import { useApp } from "@/components/providers/AppProvider";
+import { services, whatsappLink } from "@/content/site";
 import BuildLog from "./BuildLog";
 import s from "./Services.module.css";
 
 export default function Services() {
   const root = useRef<HTMLElement>(null);
   const [open, setOpen] = useState<number | null>(0);
+  const { scrollTo } = useApp();
 
   useGSAP(
     () => {
       if (prefersReducedMotion()) return;
+      gsap.from("[data-label]", {
+        y: 14,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: { trigger: "[data-title]", start: "top 88%", once: true },
+      });
       gsap.from("[data-title] .line > span", {
         yPercent: 110,
         duration: 1.1,
@@ -30,8 +39,8 @@ export default function Services() {
       });
       gsap.fromTo(
         "[data-monitor]",
-        { scale: 0.82, rotateX: 18, transformPerspective: 1200 },
-        { scale: 1, rotateX: 0, ease: "none", scrollTrigger: { trigger: "[data-monitor]", start: "top bottom", end: "center 55%", scrub: true } }
+        { scale: 0.86, rotateX: 16, transformPerspective: 1200 },
+        { scale: 1, rotateX: 0, ease: "none", scrollTrigger: { trigger: "[data-monitor]", start: "top bottom", end: "center 60%", scrub: true } }
       );
       gsap.from("[data-svc]", {
         x: -60,
@@ -57,14 +66,19 @@ export default function Services() {
     setTimeout(() => ScrollTrigger.refresh(), 650); // heights changed
   };
 
+  const goContact = (e: React.MouseEvent) => {
+    e.preventDefault();
+    scrollTo("contact");
+  };
+
   return (
-    <section
-      ref={root}
-      id="services"
-      className={s.cook}
-    >
+    <section ref={root} id="services" className={s.cook}>
       <div className="wrap">
         <header className={s.head}>
+          <p className={s.label} data-label>
+            <span className={s.labelDot} aria-hidden="true" />
+            02 / Services
+          </p>
           <h2 className={s.title} data-title>
             <span className="line">
               <span className="chrome">WHAT WE</span>
@@ -93,6 +107,7 @@ export default function Services() {
                   onMouseEnter={(e) => scramble(e.currentTarget.querySelector("[data-scramble]"))}
                   onClick={(e) => toggle(i, e.currentTarget.querySelector("[data-scramble]"))}
                 >
+                  <span className={s.num}>{String(i + 1).padStart(2, "0")}</span>
                   <span className={s.name} data-scramble data-text={svc.name.toUpperCase()}>
                     {svc.name.toUpperCase()}
                   </span>
@@ -107,6 +122,20 @@ export default function Services() {
                       <div>
                         <h3>{svc.tag}</h3>
                         <p>{svc.text}</p>
+                        <div className={s.ctas}>
+                          <a href="#contact" className={s.cta} onClick={goContact} tabIndex={isOpen ? 0 : -1}>
+                            Start this project <span aria-hidden="true">↗</span>
+                          </a>
+                          <a
+                            href={whatsappLink(`Hi Let's cook! I'm interested in ${svc.name}. Can we talk?`)}
+                            className={s.ctaGhost}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            tabIndex={isOpen ? 0 : -1}
+                          >
+                            Ask on WhatsApp
+                          </a>
+                        </div>
                       </div>
                       <ul>
                         {svc.points.map((p) => (
