@@ -146,12 +146,12 @@ export type Project = {
 };
 
 export const projects: Project[] = [
-  { kind: "Web application", title: "Retail Billing Dashboard", text: "Inventory, invoicing and daily sales reporting for a multi-branch retail store.", results: ["Billing time cut by 60%", "Live stock across 3 branches"], glyph: "₹", metricLabel: "Billing time", metricValue: "−60%" },
-  { kind: "Android & iOS", title: "Campus Events App", text: "Event discovery, registration and QR check-in built for a college community.", results: ["2,400+ registrations", "Paperless check-in"], glyph: "QR", metricLabel: "Registrations", metricValue: "2,400+" },
-  { kind: "Website", title: "Studio Portfolio Site", text: "A fast, image-heavy portfolio with a CMS the owner updates without calling us.", results: ["1.2s load time", "Self-managed content"], glyph: "1.2s", metricLabel: "Load time", metricValue: "1.2s" },
-  { kind: "Web application", title: "Clinic Appointment Portal", text: "Online booking, doctor schedules and automated WhatsApp reminders.", results: ["70% fewer no-shows", "Reminders on autopilot"], glyph: "+", metricLabel: "No-shows", metricValue: "−70%" },
-  { kind: "Student project", title: "Final Year ML Project", text: "A crop-disease detection model with a simple web interface and full documentation.", results: ["Working demo + report", "Viva-ready walkthrough"], glyph: "ML", metricLabel: "Delivered", metricValue: "Demo + report" },
-  { kind: "Web application", title: "Logistics Tracking Tool", text: "Driver assignment, live trip status and delivery proof capture for a courier fleet.", results: ["Real-time trip status", "Digital proof of delivery"], glyph: "→", metricLabel: "Trip status", metricValue: "Real-time" },
+  { kind: "Web application", title: "Retail Billing Dashboard", image: "/work/billing.webp", text: "Inventory, invoicing and daily sales reporting for a multi-branch retail store.", results: ["Billing time cut by 60%", "Live stock across 3 branches"], glyph: "₹", metricLabel: "Billing time", metricValue: "−60%" },
+  { kind: "Android & iOS", title: "Campus Events App", image: "/work/events.webp", text: "Event discovery, registration and QR check-in built for a college community.", results: ["2,400+ registrations", "Paperless check-in"], glyph: "QR", metricLabel: "Registrations", metricValue: "2,400+" },
+  { kind: "Website", title: "Studio Portfolio Site", image: "/work/portfolio.webp", text: "A fast, image-heavy portfolio with a CMS the owner updates without calling us.", results: ["1.2s load time", "Self-managed content"], glyph: "1.2s", metricLabel: "Load time", metricValue: "1.2s" },
+  { kind: "Web application", title: "Clinic Appointment Portal", image: "/work/clinic.webp", text: "Online booking, doctor schedules and automated WhatsApp reminders.", results: ["70% fewer no-shows", "Reminders on autopilot"], glyph: "+", metricLabel: "No-shows", metricValue: "−70%" },
+  { kind: "Student project", title: "Final Year ML Project", image: "/work/ml.webp", text: "A crop-disease detection model with a simple web interface and full documentation.", results: ["Working demo + report", "Viva-ready walkthrough"], glyph: "ML", metricLabel: "Delivered", metricValue: "Demo + report" },
+  { kind: "Web application", title: "Logistics Tracking Tool", image: "/work/logistics.webp", text: "Driver assignment, live trip status and delivery proof capture for a courier fleet.", results: ["Real-time trip status", "Digital proof of delivery"], glyph: "→", metricLabel: "Trip status", metricValue: "Real-time" },
 ];
 
 export const testimonials = [
