@@ -3,22 +3,21 @@
 import { useRef } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import { reasons, stats } from "@/content/site";
-import Typewriter from "@/components/ui/Typewriter";
 import s from "./About.module.css";
 
-const HEADLINE = "Great ideas deserve great solutions.";
 const QUOTE = "The name is a joke about kitchens, but the method is real: good ingredients, a written recipe, and someone watching the pan.";
 
 /** Counts a number up from 0 once. */
 const countUp = (el: HTMLElement, vars: gsap.TweenVars = {}) => {
   const to = Number(el.dataset.count);
   const o = { v: 0 };
-  gsap.to(o, { v: to, duration: 1.8, ease: "power3.out", onUpdate: () => (el.textContent = String(Math.round(o.v))), ...vars });
+  gsap.to(o, { v: to, duration: 1.6, ease: "power2.out", onUpdate: () => (el.textContent = String(Math.round(o.v))), ...vars });
 };
 
 /**
- * About: on desktop the section pins and slides SIDEWAYS while you scroll down:
- * headline + quote → numbers → "why us" → four reason cards. Phones keep the normal vertical layout.
+ * About, set like a printed magazine spread.
+ * Desktop: the section pins and the pages slide sideways while you scroll down.
+ * Phones: the same pages stacked normally.
  */
 export default function About() {
   const root = useRef<HTMLElement>(null);
@@ -28,19 +27,20 @@ export default function About() {
       if (prefersReducedMotion()) return;
       const mm = gsap.matchMedia();
 
-      // ---------- desktop: horizontal scroll ----------
+      // ---------- desktop: pages slide sideways ----------
       mm.add("(min-width: 901px)", () => {
         const track = root.current!.querySelector<HTMLElement>("[data-track]")!;
         const distance = () => track.scrollWidth - window.innerWidth;
 
-        // the headline lights up word by word as the section arrives
-        gsap.fromTo(
-          "[data-word]",
-          { opacity: 0.14 },
-          { opacity: 1, stagger: 0.1, ease: "none", scrollTrigger: { trigger: root.current, start: "top 75%", end: "top top", scrub: true } }
-        );
+        // headline lines rise in as the section arrives
+        gsap.from("[data-line]", {
+          yPercent: 100,
+          duration: 1.1,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: { trigger: root.current, start: "top 60%", once: true },
+        });
 
-        // pin the section and move the track sideways
         const slide = gsap.to(track, {
           x: () => -distance(),
           ease: "none",
@@ -49,68 +49,45 @@ export default function About() {
             start: "top top",
             end: () => `+=${distance()}`,
             pin: true,
-            scrub: 0.8,
+            scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
           },
         });
 
-        // progress bar + the big ghost text drifting slower than the track
+        // folio: a thin line that fills + the page number
         gsap.fromTo("[data-progress]", { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${distance()}`, scrub: true } });
-        gsap.fromTo("[data-ghost]", { xPercent: 0 }, { xPercent: -25, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: () => `+=${distance()}`, scrub: true } });
-        gsap.to("[data-hint]", { opacity: 0, scrollTrigger: { trigger: root.current, start: "top top", end: "+=300", scrub: true } });
 
-        // background: the glow travels blue → orange → fire; the grid slides slower than the cards (depth)
-        const bgST = () => ({ trigger: root.current, start: "top top", end: () => `+=${distance()}`, scrub: 1 });
-        gsap
-          .timeline({ scrollTrigger: bgST(), defaults: { ease: "none" } })
-          .fromTo("[data-blob=blue]", { xPercent: 0, opacity: 1 }, { xPercent: -120, opacity: 0, duration: 0.5 }, 0)
-          .fromTo("[data-blob=orange]", { xPercent: 120, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.4 }, 0.1)
-          .to("[data-blob=orange]", { xPercent: -130, opacity: 0, duration: 0.4 }, 0.55)
-          .fromTo("[data-blob=fire]", { xPercent: 140, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.45 }, 0.5);
-        gsap.fromTo("[data-grid]", { x: 0 }, { x: () => -distance() * 0.3, ease: "none", scrollTrigger: bgST() });
-
-        // things inside the moving track animate when they slide into view
+        // each page fades up gently as it slides in
+        gsap.utils.toArray<HTMLElement>("[data-page]").forEach((page) =>
+          gsap.from(page, {
+            opacity: 0,
+            y: 24,
+            duration: 0.9,
+            ease: "power2.out",
+            scrollTrigger: { trigger: page, containerAnimation: slide, start: "left 85%", once: true },
+          })
+        );
         root.current!.querySelectorAll<HTMLElement>("[data-count]").forEach((el) =>
           countUp(el, { scrollTrigger: { trigger: el, containerAnimation: slide, start: "left 85%", once: true } })
         );
-        gsap.from("[data-stat] > span:first-child", {
-          scaleX: 0,
-          duration: 1.6,
-          ease: "power3.out",
-          stagger: 0.12,
-          scrollTrigger: { trigger: "[data-stats]", containerAnimation: slide, start: "left 85%", once: true },
-        });
-        gsap.utils.toArray<HTMLElement>("[data-reason]").forEach((card) =>
-          gsap.from(card, {
-            y: 80,
-            rotate: 3,
-            opacity: 0,
-            duration: 1,
-            ease: "expo.out",
-            scrollTrigger: { trigger: card, containerAnimation: slide, start: "left 92%", once: true },
-          })
-        );
       });
 
-      // ---------- phones / tablets: normal vertical scroll ----------
+      // ---------- phones / tablets: normal stack ----------
       mm.add("(max-width: 900px)", () => {
-        gsap.fromTo(
-          "[data-word]",
-          { opacity: 0.14 },
-          { opacity: 1, stagger: 0.1, ease: "none", scrollTrigger: { trigger: "[data-headline]", start: "top 80%", end: "bottom 45%", scrub: true } }
+        gsap.from("[data-line]", {
+          yPercent: 100,
+          duration: 1.1,
+          ease: "power3.out",
+          stagger: 0.1,
+          scrollTrigger: { trigger: root.current, start: "top 75%", once: true },
+        });
+        gsap.utils.toArray<HTMLElement>("[data-page]").forEach((page) =>
+          gsap.from(page, { opacity: 0, y: 30, duration: 0.9, ease: "power2.out", scrollTrigger: { trigger: page, start: "top 85%", once: true } })
         );
         root.current!.querySelectorAll<HTMLElement>("[data-count]").forEach((el) =>
-          countUp(el, { scrollTrigger: { trigger: el, start: "top 88%", once: true } })
+          countUp(el, { scrollTrigger: { trigger: el, start: "top 90%", once: true } })
         );
-        gsap.from("[data-reason]", {
-          y: 60,
-          opacity: 0,
-          duration: 1,
-          ease: "expo.out",
-          stagger: 0.08,
-          scrollTrigger: { trigger: "[data-reasons]", start: "top 80%", once: true },
-        });
       });
 
       return () => mm.revert();
@@ -120,89 +97,71 @@ export default function About() {
 
   return (
     <section ref={root} id="about" className={s.about}>
-      {/* background: travelling colour glow (blue → orange → fire) + faint grid lines */}
-      <div className={s.bg} aria-hidden="true">
-        <span className={`${s.blob} ${s.blue}`} data-blob="blue" />
-        <span className={`${s.blob} ${s.orange}`} data-blob="orange" />
-        <span className={`${s.blob} ${s.fire}`} data-blob="fire" />
-        <span className={s.grid} data-grid />
-      </div>
-      <div className={s.ghost} data-ghost aria-hidden="true">
-        LET&apos;S COOK • BUILD BEYOND IDEAS •
-      </div>
-
-      <div className={s.top}>
-        <p className={s.label}>
-          <span className={s.labelDot} aria-hidden="true" />
-          04 / About
+      <header className={s.top}>
+        <p className={s.kicker}>About us</p>
+        <p className={s.hint} aria-hidden="true">
+          Scroll to turn the page
         </p>
-        <p className={s.hint} data-hint aria-hidden="true">
-          Keep scrolling <span>→</span>
-        </p>
-      </div>
+      </header>
 
       <div className={s.viewport}>
         <div className={s.track} data-track>
-          {/* panel 1: headline + quote */}
-          <div className={`${s.panel} ${s.intro}`}>
-            <h2 className={s.headline} data-headline>
-              {HEADLINE.split(" ").map((w, i, all) => (
-                <span key={i} className={`${s.word} ${i >= all.length - 2 ? s.hot : ""}`} data-word>
-                  {w}
-                </span>
-              ))}
+          {/* page 1: headline + pull quote */}
+          <div className={`${s.page} ${s.opening}`}>
+            <h2 className={s.headline}>
+              <span className={s.mask}>
+                <span data-line>Great ideas</span>
+              </span>
+              <span className={s.mask}>
+                <span data-line>deserve</span>
+              </span>
+              <span className={s.mask}>
+                <em data-line>great solutions.</em>
+              </span>
             </h2>
-            <div className={s.bubbleWrap}>
-              <div className={s.bubbleCol}>
-                <Typewriter className={s.bubble} text={QUOTE} />
-                <p className={s.sign}>
-                  <span aria-hidden="true">—</span> The Let&apos;s Cook team, Tamil Nadu
-                </p>
-              </div>
-            </div>
+            <figure className={s.quote} data-page>
+              <span className={s.quoteMark} aria-hidden="true">
+                “
+              </span>
+              <blockquote>{QUOTE}</blockquote>
+              <figcaption>The Let&apos;s Cook team, Tamil Nadu</figcaption>
+            </figure>
           </div>
 
-          {/* panel 2: numbers */}
-          <div className={`${s.panel} ${s.numbers}`}>
-            <p className="label">BY THE NUMBERS</p>
-            <div className={s.stats} data-stats>
+          {/* page 2: numbers */}
+          <div className={`${s.page} ${s.numbers}`} data-page>
+            <h3 className={s.pageTitle}>
+              In <em>numbers</em>
+            </h3>
+            <dl className={s.stats}>
               {stats.map((st) => (
-                <div key={st.label} className={s.stat} data-stat>
-                  <span className={s.statBar} aria-hidden="true" />
-                  <b>
+                <div key={st.label} className={s.stat}>
+                  <dt>{st.label}</dt>
+                  <dd>
                     <span data-count={st.value}>{st.value}</span>
-                    {st.suffix && <sup>{st.suffix}</sup>}
-                  </b>
-                  <span className="label">{st.label}</span>
+                    {st.suffix && <small>{st.suffix}</small>}
+                  </dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
 
-          {/* panel 3: why us intro + panels 4–7: reason cards */}
-          <div className={`${s.panel} ${s.whyIntro}`} data-reasons>
-            <p className="label">WHY LET&apos;S COOK</p>
-            <h2>A small team that treats your project like ours</h2>
-            <p>
+          {/* page 3: why us */}
+          <div className={`${s.page} ${s.why}`} data-page>
+            <h3 className={s.pageTitle}>
+              Why <em>Let&apos;s Cook</em>
+            </h3>
+            <p className={s.whyLead}>A small team that treats your project like ours.</p>
+            <p className={s.whyText}>
               We work with business owners, early founders and students. You get direct access to the people writing the
               code, not a queue.
             </p>
           </div>
+
+          {/* pages 4–7: the four reasons, set as columns */}
           {reasons.map((r, i) => (
-            <article
-              key={r.key}
-              className={`${s.panel} ${s.card}`}
-              data-reason
-              onPointerMove={(e) => {
-                const b = e.currentTarget.getBoundingClientRect();
-                e.currentTarget.style.setProperty("--px", `${e.clientX - b.left}px`);
-                e.currentTarget.style.setProperty("--py", `${e.clientY - b.top}px`);
-              }}
-            >
-              <div className={s.cardTop}>
-                <span className={s.key}>{r.key}</span>
-                <span className={s.cardNum}>{String(i + 1).padStart(2, "0")}</span>
-              </div>
+            <article key={r.key} className={`${s.page} ${s.reason}`} data-page>
+              <span className={s.no}>No. {String(i + 1).padStart(2, "0")}</span>
               <h3>{r.title}</h3>
               <p>{r.text}</p>
             </article>
@@ -211,9 +170,12 @@ export default function About() {
         </div>
       </div>
 
-      {/* progress along the bottom (desktop) */}
-      <div className={s.progress} aria-hidden="true">
-        <span data-progress />
+      {/* folio along the bottom (desktop) */}
+      <div className={s.folio} aria-hidden="true">
+        <span className={s.folioLine}>
+          <span data-progress />
+        </span>
+        <span className={s.folioName}>Let&apos;s Cook Technologies</span>
       </div>
     </section>
   );
