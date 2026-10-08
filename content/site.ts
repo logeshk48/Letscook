@@ -10,6 +10,7 @@ export const site = {
   phoneDisplay: "+91 70946 00771",
   phoneE164: "917094600771",
   instagram: "letscook_tech",
+  linkedin: "https://www.linkedin.com/company/let-s-co-ok/",
   location: "Tamil Nadu, India",
   coords: `11° 07' 37" N   78° 39' 25" E`,
 };

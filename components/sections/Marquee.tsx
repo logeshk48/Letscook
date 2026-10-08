@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import { gsap, useGSAP, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import { useApp } from "@/components/providers/AppProvider";
 import { marqueeItems } from "@/content/site";
 import s from "./Marquee.module.css";
@@ -18,18 +18,31 @@ export default function Marquee() {
       const tweens = rows.map((row, i) =>
         gsap.fromTo(row, { xPercent: i % 2 ? -50 : 0 }, { xPercent: i % 2 ? 0 : -50, duration: 38, ease: "none", repeat: -1 })
       );
-      // speed follows scroll velocity, then eases back to normal
-      const speed = { v: 1 };
-      const apply = () => tweens.forEach((t) => t.timeScale(speed.v));
-      let settle: gsap.core.Tween | null = null;
-      const off = onScrollVelocity((v) => {
-        const target = 1 + Math.min(Math.abs(v) / 6, 5);
-        if (target <= speed.v + 0.05) return; // ignore tiny changes
-        gsap.to(speed, { v: target, duration: 0.3, overwrite: true, onUpdate: apply });
-        settle?.kill();
-        settle = gsap.to(speed, { v: 1, duration: 1.2, delay: 0.4, onUpdate: apply });
+      // pause while off screen
+      const st = ScrollTrigger.create({
+        trigger: root.current,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => tweens.forEach((t) => (self.isActive ? t.play() : t.pause())),
       });
-      return () => off();
+      // speed follows scroll velocity, then eases back (one ticker, no tweens per scroll event)
+      let target = 1;
+      let speed = 1;
+      const off = onScrollVelocity((v) => {
+        target = Math.max(target, 1 + Math.min(Math.abs(v) / 6, 5));
+      });
+      const tick = () => {
+        if (!st.isActive) return;
+        speed += (target - speed) * 0.12;
+        target += (1 - target) * 0.04;
+        tweens.forEach((t) => t.timeScale(speed));
+      };
+      gsap.ticker.add(tick);
+      return () => {
+        off();
+        gsap.ticker.remove(tick);
+        st.kill();
+      };
     },
     { scope: root }
   );

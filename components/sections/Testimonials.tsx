@@ -22,6 +22,7 @@ export default function Testimonials() {
 
       mm.add("(min-width: 901px)", () => {
         const quotes = gsap.utils.toArray<HTMLElement>("[data-quote]");
+        let last = 0;
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
@@ -32,7 +33,10 @@ export default function Testimonials() {
             scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
-            onUpdate: (self) => setActive(Math.min(quotes.length - 1, Math.floor(self.progress * quotes.length * 0.999))),
+            onUpdate: (self) => {
+              const i = Math.min(quotes.length - 1, Math.floor(self.progress * quotes.length * 0.999));
+              if (i !== last) setActive((last = i));
+            },
           },
         });
 
@@ -66,7 +70,10 @@ export default function Testimonials() {
     <section ref={root} className={s.words} aria-label="What clients say">
       <div className={`wrap ${s.inner}`}>
         <aside className={s.side}>
-          
+          <p className={s.kicker}>
+            <span className={s.dot} aria-hidden="true" />
+            Kind words
+          </p>
           <h2 className={s.title}>
             What people say after <span>handover.</span>
           </h2>

@@ -27,7 +27,6 @@
   --f-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
   --f-comic: "Luckiest Guy", "Arial Black", Impact, sans-serif; /* bubbly comic-graffiti display */
-  --f-serif: "Instrument Serif", Georgia, "Times New Roman", serif; /* classic editorial accents */
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-io: cubic-bezier(0.76, 0, 0.24, 1);

@@ -26,16 +26,29 @@ export default function Cursor() {
     let raf = 0;
     let away = false; // only touch <html> classes when this actually changes
 
+    let lastTarget: EventTarget | null = null;
     const move = (e: PointerEvent) => {
       mx = e.clientX;
       my = e.clientY;
+      if (!scrolling && e.target !== lastTarget) {
+        lastTarget = e.target;
+        over(e);
+      }
       if (away) {
         away = false;
         root.classList.remove(s.away);
       }
       if (!raf) raf = requestAnimationFrame(loop); // wake the loop
     };
+    // While the page scrolls, elements slide under a still mouse and fire lots of "over" events.
+    // Skip those (they cause restyles every frame) and re-check once the mouse moves again.
+    let scrolling = 0;
+    const onScroll = () => {
+      window.clearTimeout(scrolling);
+      scrolling = window.setTimeout(() => (scrolling = 0), 150);
+    };
     const over = (e: PointerEvent) => {
+      if (scrolling) return;
       const t = e.target as HTMLElement;
       const typing = t.closest("input, textarea, select, [contenteditable='true']");
       const big = t.closest("[data-cursor='big']");
@@ -66,6 +79,7 @@ export default function Cursor() {
 
     window.addEventListener("pointermove", move, { passive: true });
     window.addEventListener("pointerover", over, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pointerdown", down);
     window.addEventListener("pointerup", up);
     document.addEventListener("pointerleave", leave);
@@ -75,6 +89,8 @@ export default function Cursor() {
       root.classList.remove(s.hasCursor, s.away);
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerover", over);
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(scrolling);
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("pointerup", up);
       document.removeEventListener("pointerleave", leave);

@@ -77,7 +77,7 @@ export default function Services() {
         <header className={s.head}>
           <p className={s.label} data-label>
             <span className={s.labelDot} aria-hidden="true" />
-            02 / Services
+            Services
           </p>
           <h2 className={s.title} data-title>
             <span className="line">

@@ -57,15 +57,22 @@ export default function Hero() {
         end: "bottom top",
         onToggle: (self) => tweens.forEach((t) => (self.isActive ? t.play() : t.pause())),
       });
+      // scroll speed only sets a target; one ticker eases toward it (no tweens created per scroll event)
+      let target = 1;
+      let speed = 1;
       const off = onScrollVelocity((v) => {
-        const boost = 1 + Math.min(Math.abs(v) * 0.6, 6);
-        tweens.forEach((t) => {
-          gsap.to(t, { timeScale: boost, duration: 0.2, overwrite: true });
-          gsap.to(t, { timeScale: 1, duration: 1.2, delay: 0.2 });
-        });
+        target = Math.max(target, 1 + Math.min(Math.abs(v) * 0.6, 6));
       });
+      const tick = () => {
+        if (!st.isActive) return;
+        speed += (target - speed) * 0.12;
+        target += (1 - target) * 0.04;
+        tweens.forEach((t) => t.timeScale(speed));
+      };
+      gsap.ticker.add(tick);
       return () => {
         off();
+        gsap.ticker.remove(tick);
         st.kill();
       };
     },
@@ -116,8 +123,8 @@ export default function Hero() {
         {Array.from({ length: ROWS }, (_, i) => (
           <div key={i} className={s.row}>
             <div className={s.track} data-track>
-              <span>{WALL.repeat(3)}</span>
-              <span>{WALL.repeat(3)}</span>
+              <span>{WALL.repeat(2)}</span>
+              <span>{WALL.repeat(2)}</span>
             </div>
           </div>
         ))}

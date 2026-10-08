@@ -80,7 +80,7 @@ export default function Recipe() {
         <header className={s.head}>
           <p className={s.label} data-label>
             <span className={s.labelDot} aria-hidden="true" />
-            03 / Our recipe
+            Our recipe
           </p>
           <h2 className={s.title} data-title>
             Idea to

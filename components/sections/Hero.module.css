@@ -25,7 +25,7 @@
   font: 400 clamp(3.6rem, 7vw, 6.6rem)/1 var(--f-comic);
   pointer-events: none;
 }
-.row { overflow: hidden; }
+.row { min-width: 0; }
 .track { display: flex; width: max-content; will-change: transform; }
 .track span {
   white-space: nowrap;

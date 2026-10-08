@@ -65,7 +65,7 @@ export default function Work() {
         <header className={s.head}>
           <p className={s.kicker}>
             <span className={s.dot} aria-hidden="true" />
-            05 / Selected work
+            Selected work
           </p>
           <h2 className={s.title} data-title>
             <span className="line">
