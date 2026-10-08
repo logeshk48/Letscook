@@ -1,7 +1,55 @@
-.faq { background: var(--bg); padding-block: clamp(4rem, 9vw, 8rem); }
-.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(2rem, 5vw, 5rem); }
-.grid h2 { font: 700 clamp(2rem, 4vw, 3.8rem)/1 var(--f-cond); text-transform: uppercase; margin-top: 1rem; }
+/* FAQ: calm two-column layout. Heading + contact card on the left, numbered questions on the right. */
+.faq { background: var(--bg); padding-block: clamp(5rem, 10vw, 8.5rem); }
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
 
+/* ---------- left ---------- */
+.side { position: relative; height: 100%; }
+.sideIn { position: sticky; top: 16vh; display: grid; gap: 1.3rem; }
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font: 500 0.74rem/1 var(--f-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--flame); }
+.title { font: 900 clamp(2.2rem, 3.8vw, 4rem)/0.95 var(--f-display); text-transform: uppercase; letter-spacing: -0.01em; }
+.hot { color: var(--flame); }
+.lede { color: var(--fg-2); max-width: 32ch; }
+
+.ask {
+  margin-top: 1.2rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #121a26, #0a0f17);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+.askTitle { font: 700 1.5rem/1 var(--f-cond); text-transform: uppercase; letter-spacing: 0.02em; }
+.askText { margin-top: 0.6rem; color: var(--fg-2); font-size: 0.95rem; }
+.askLinks { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.2rem; margin-top: 1.2rem; }
+.askBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem 1.15rem;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--ink);
+  font: 600 0.9rem/1 var(--f-body);
+  text-decoration: none;
+}
+.askBtn svg { width: 18px; height: 18px; fill: var(--wa); }
+.askMail { font: 500 0.82rem/1.3 var(--f-mono); color: var(--fg-2); text-decoration: none; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+
+/* ---------- questions ---------- */
+.list { list-style: none; margin: 0; padding: 0; }
 .qa { border-top: 1px solid var(--line); }
 .qa:last-child { border-bottom: 1px solid var(--line); }
 .qa button {
@@ -9,26 +57,25 @@
   box-sizing: border-box;
   width: 100%;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 18px;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem 0;
-  font: 700 clamp(1.15rem, 2vw, 1.7rem)/1.2 var(--f-cond);
-  text-transform: uppercase;
-  transition: color 0.3s, padding 0.4s var(--ease);
+  gap: 1rem;
+  padding: clamp(1.3rem, 2.2vw, 1.8rem) 0;
 }
-.qa button:hover { color: var(--flame); padding-left: 10px; }
-.qa button:focus-visible { outline: 2px solid var(--flame); }
+.qa button:focus-visible { outline: 2px solid var(--flame); outline-offset: 4px; }
+.no { font: 500 0.8rem/1 var(--f-mono); letter-spacing: 0.1em; color: var(--fg-3); }
+.q { font: 700 clamp(1.25rem, 2.1vw, 1.85rem)/1.15 var(--f-cond); text-transform: uppercase; letter-spacing: 0.01em; }
+.open .no { color: var(--flame); }
 
-.pm { position: relative; width: 18px; height: 18px; flex-shrink: 0; }
+.pm { position: relative; width: 18px; height: 18px; }
 .pm::before, .pm::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
-  height: 2px;
+  height: 1.5px;
   background: currentColor;
   transition: transform 0.5s var(--ease);
 }
@@ -38,8 +85,18 @@
 .ans { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.5s var(--ease); }
 .open .ans { grid-template-rows: 1fr; }
 .ans > div { overflow: hidden; }
-.ans p { color: var(--fg-2); padding: 0 0 1.6rem; max-width: 62ch; }
+.ans p {
+  margin: 0 0 1.8rem 4rem;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--flame);
+  color: var(--fg-2);
+  font-size: 1.05rem;
+  max-width: 60ch;
+}
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: 1fr; }
+  .sideIn { position: static; }
+  .qa button { grid-template-columns: 2.2rem minmax(0, 1fr) 16px; }
+  .ans p { margin-left: 0; }
 }
