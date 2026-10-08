@@ -13,9 +13,20 @@ export default function Faq() {
   const root = useRef<HTMLElement>(null);
   const [open, setOpen] = useState<number | null>(0);
 
+  const refreshTimer = useRef(0);
+  const refreshLater = () => {
+    window.clearTimeout(refreshTimer.current);
+    refreshTimer.current = window.setTimeout(() => ScrollTrigger.refresh(), 600); // page got taller/shorter
+  };
   const toggle = (i: number) => {
     setOpen((cur) => (cur === i ? null : i));
-    setTimeout(() => ScrollTrigger.refresh(), 550); // page got taller/shorter
+    refreshLater();
+  };
+  // mouse users: hovering a question opens it (touch screens still tap)
+  const hoverOpen = (i: number) => (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse" || open === i) return;
+    setOpen(i);
+    refreshLater();
   };
 
   useGSAP(
@@ -81,7 +92,7 @@ export default function Faq() {
           {faqs.map((f, i) => {
             const isOpen = open === i;
             return (
-              <li key={f.q} className={`${s.qa} ${isOpen ? s.open : ""}`} data-q>
+              <li key={f.q} className={`${s.qa} ${isOpen ? s.open : ""}`} data-q onPointerEnter={hoverOpen(i)}>
                 <button aria-expanded={isOpen} aria-controls={`faq-${i}`} onClick={() => toggle(i)}>
                   <span className={s.no}>{String(i + 1).padStart(2, "0")}</span>
                   <span className={s.q}>{f.q}</span>
