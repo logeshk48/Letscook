@@ -80,19 +80,39 @@
 
 /* ---------- the order ticket ---------- */
 .ticket {
-  --edge: 10px;
+  --perf: 48; /* perforations per edge; their size follows the ticket width */
   position: relative;
   color: var(--ink);
   background: var(--paper);
   padding: 1.5rem clamp(1.3rem, 2.4vw, 2.1rem) 1.3rem;
-  /* torn / perforated top and bottom edges */
-  -webkit-mask:
-    radial-gradient(circle var(--edge) at 50% 0, transparent 98%, #000) 0 0 / calc(var(--edge) * 2.4) 51% repeat-x,
-    radial-gradient(circle var(--edge) at 50% 100%, transparent 98%, #000) 0 100% / calc(var(--edge) * 2.4) 51% repeat-x;
-  mask:
-    radial-gradient(circle var(--edge) at 50% 0, transparent 98%, #000) 0 0 / calc(var(--edge) * 2.4) 51% repeat-x,
-    radial-gradient(circle var(--edge) at 50% 100%, transparent 98%, #000) 0 100% / calc(var(--edge) * 2.4) 51% repeat-x;
 }
+/* perforated top and bottom edges: round notches punched out of the paper */
+.ticket::before,
+.ticket::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  aspect-ratio: var(--perf) / 1; /* one square tile per notch */
+  background: radial-gradient(closest-side, var(--bg-2) 66%, transparent 70%) 0 0 / calc(100% / var(--perf)) 100% repeat-x;
+  pointer-events: none;
+}
+/* faint order number pressed into the paper, like a kitchen ticket */
+.stamp {
+  position: absolute;
+  right: clamp(1rem, 2.4vw, 2rem);
+  bottom: clamp(0.4rem, 1.2vw, 0.9rem);
+  font: 900 clamp(4.5rem, 8vw, 7.5rem)/1 var(--f-display);
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  opacity: 0.045;
+  rotate: -8deg;
+  pointer-events: none;
+  user-select: none;
+}
+.fields, .ticketFoot, .ticketHead { position: relative; } /* keep the form above the number */
+.ticket::before { top: 0; translate: 0 -50%; }
+.ticket::after { bottom: 0; translate: 0 50%; }
 .ticketHead {
   display: flex;
   justify-content: space-between;
@@ -224,6 +244,7 @@
   .side { position: static; }
 }
 @media (max-width: 560px) {
+  .stamp { bottom: 7.4rem; font-size: 4.2rem; }
   .three { grid-template-columns: 1fr; }
   .ticketFoot { grid-template-columns: 1fr; }
   .send { justify-content: center; }

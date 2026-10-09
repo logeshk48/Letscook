@@ -178,6 +178,9 @@ export default function Contact() {
 
           {/* right: the order ticket */}
           <form className={s.ticket} onSubmit={onSubmit} noValidate data-in>
+            <span className={s.stamp} aria-hidden="true">
+              48
+            </span>
             <div className={s.ticketHead}>
               <span>New order</span>
               <span>Table: you</span>
