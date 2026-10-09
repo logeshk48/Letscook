@@ -31,6 +31,7 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
   --gut: clamp(16px, 5vw, 72px);
+  --tap: 48px; /* minimum comfortable touch target */
   --logo: url("/brand/logo-mark.png");
 
   color-scheme: dark;

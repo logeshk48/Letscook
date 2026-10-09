@@ -61,6 +61,9 @@
   color: var(--fg-2);
 }
 .copy:focus-visible { outline: 2px solid var(--flame); outline-offset: 3px; }
+/* bigger invisible hit area so the small pill is easy to tap */
+.copy { position: relative; }
+.copy::after { content: ""; position: absolute; left: 50%; top: 50%; min-width: var(--tap); min-height: var(--tap); width: 100%; translate: -50% -50%; }
 
 .facts {
   display: flex;
@@ -177,8 +180,11 @@
 
 /* ---------- footer sign-off ---------- */
 .footer { margin-top: clamp(3.5rem, 7vw, 5.5rem); border-top: 1px solid var(--line); }
-.links { display: flex; flex-wrap: wrap; gap: 0.6rem 2rem; padding: 1.6rem 0; }
+.links { display: flex; flex-wrap: wrap; gap: 0 2rem; padding: 0.5rem 0; }
 .links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
   font: 500 0.74rem/1 var(--f-mono);
   letter-spacing: 0.16em;
   text-transform: uppercase;

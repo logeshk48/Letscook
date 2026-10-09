@@ -48,8 +48,8 @@ export default function Hero() {
       if (prefersReducedMotion()) return;
       const tweens = gsap.utils.toArray<HTMLElement>("[data-track]").map((el, i) =>
         i % 2
-          ? gsap.fromTo(el, { xPercent: -50 }, { xPercent: 0, duration: 60, ease: "none", repeat: -1 })
-          : gsap.fromTo(el, { xPercent: 0 }, { xPercent: -50, duration: 60, ease: "none", repeat: -1 })
+          ? gsap.fromTo(el, { xPercent: -50 }, { xPercent: 0, duration: 48, ease: "none", repeat: -1 })
+          : gsap.fromTo(el, { xPercent: 0 }, { xPercent: -50, duration: 48, ease: "none", repeat: -1 })
       );
       const st = ScrollTrigger.create({
         trigger: root.current,
