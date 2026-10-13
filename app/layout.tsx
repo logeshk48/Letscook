@@ -17,6 +17,7 @@ import AppProvider from "@/components/providers/AppProvider";
 import Preloader from "@/components/layout/Preloader";
 import Cursor from "@/components/layout/Cursor";
 import Nav from "@/components/layout/Nav";
+import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Preloader />
           <Nav />
           {children}
+          <WhatsAppFloat />
         </AppProvider>
       </body>
     </html>
