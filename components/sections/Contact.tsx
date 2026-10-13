@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import { useApp } from "@/components/providers/AppProvider";
-import { budgetOptions, navLinks, needOptions, site, whatsappLink } from "@/content/site";
+import { navLinks, needOptions, site, whatsappLink } from "@/content/site";
 import s from "./Contact.module.css";
 
 type Status = "idle" | "sending" | "sent" | "fallback";
@@ -70,7 +70,6 @@ export default function Contact() {
     const message = [
       `Hi Let's cook! I'm ${data.name}.`,
       `Need: ${data.need || "Not sure"}`,
-      `Budget: ${data.budget}`,
       `Idea: ${data.idea}`,
       `Email: ${data.email}`,
       data.phone ? `Phone: ${data.phone}` : "",
@@ -199,31 +198,17 @@ export default function Contact() {
                 </Field>
               </div>
 
-              <div className={s.pair}>
-                <fieldset className={s.group}>
-                  <legend>What are we cooking?</legend>
-                  <div className={s.chips}>
-                    {needOptions.map((o) => (
-                      <label key={o} className={s.chip}>
-                        <input type="radio" name="need" value={o} />
-                        <span>{o}</span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-
-                <fieldset className={s.group}>
-                  <legend>Rough budget</legend>
-                  <div className={s.chips}>
-                    {budgetOptions.map((o, i) => (
-                      <label key={o} className={s.chip}>
-                        <input type="radio" name="budget" value={o} defaultChecked={i === 0} />
-                        <span>{o}</span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-              </div>
+              <fieldset className={s.group}>
+                <legend>What are we cooking?</legend>
+                <div className={s.chips}>
+                  {needOptions.map((o) => (
+                    <label key={o} className={s.chip}>
+                      <input type="radio" name="need" value={o} />
+                      <span>{o}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
 
               <Field id="idea" label="Tell us about the idea *" error={errors.idea}>
                 <textarea id="idea" name="idea" rows={2} required />

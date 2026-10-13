@@ -126,7 +126,6 @@
 
 .fields { display: grid; gap: 1rem; padding: 1.1rem 0; }
 .three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
-.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.2rem; }
 .field { display: grid; gap: 0.4rem; min-width: 0; }
 .field label,
 .group legend {
@@ -240,7 +239,6 @@
 /* ---------- phones / tablets ---------- */
 @media (max-width: 900px) {
   .body { grid-template-columns: 1fr; }
-  .pair { grid-template-columns: 1fr; }
   .side { position: static; }
 }
 @media (max-width: 560px) {

@@ -170,4 +170,3 @@ export const faqs = [
 ];
 
 export const needOptions = ["Website", "Mobile App", "Web Application", "UI / UX Design", "Student Project", "Something else"];
-export const budgetOptions = ["Not sure yet", "Under ₹25,000", "₹25,000 – ₹75,000", "₹75,000 – ₹2,00,000", "₹2,00,000+"];

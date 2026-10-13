@@ -32,7 +32,6 @@ export async function POST(req: Request) {
     `Email: ${email}`,
     `Phone: ${body.phone || "-"}`,
     `Need: ${body.need || "-"}`,
-    `Budget: ${body.budget || "-"}`,
     "",
     idea,
   ].join("\n");
