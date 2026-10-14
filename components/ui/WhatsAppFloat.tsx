@@ -4,12 +4,18 @@ import { useEffect, useState } from "react";
 import { whatsappLink } from "@/content/site";
 import s from "./WhatsAppFloat.module.css";
 
-/** Round WhatsApp button in the bottom-right corner. Appears once the visitor scrolls past the hero. */
+/** Round WhatsApp badge in the bottom-right corner. Shown after the hero, hidden again at the footer. */
 export default function WhatsAppFloat() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const check = () => setShow(window.scrollY > window.innerHeight * 0.8);
+    const check = () => {
+      const pastHero = window.scrollY > window.innerHeight * 0.8;
+      // hide again at the footer: the contact area already has WhatsApp, and the badge would cover the links
+      const footer = document.querySelector("#contact footer");
+      const atFooter = !!footer && footer.getBoundingClientRect().top < window.innerHeight - 40;
+      setShow(pastHero && !atFooter);
+    };
     check();
     window.addEventListener("scroll", check, { passive: true });
     window.addEventListener("resize", check);

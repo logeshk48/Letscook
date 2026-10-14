@@ -16,6 +16,11 @@
 .layer :global(.label) { color: rgba(14, 15, 17, 0.7); }
 .layer h2 { font: 900 clamp(2.2rem, 8vw, 8.4rem)/0.92 var(--f-display); text-transform: uppercase; }
 .layer > p:not(:global(.label)) { max-width: 50ch; font-size: 1.05rem; }
+@media (max-width: 560px) {
+  .layer { gap: 1.5rem; }
+  .layer h2 { font-size: 7.6vw; line-height: 1; } /* keeps both lines inside the screen */
+  .layer > p:not(:global(.label)) { font-size: 0.98rem; }
+}
 .hint {
   position: absolute;
   bottom: 2rem;

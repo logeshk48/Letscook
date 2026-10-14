@@ -52,9 +52,10 @@
 .core svg { width: 26px; height: 26px; fill: #fff; }
 
 @media (max-width: 560px) {
-  .wa { width: 80px; height: 80px; }
-  .core { width: 42px; height: 42px; }
-  .core svg { width: 22px; height: 22px; }
+  .wa { width: 68px; height: 68px; }
+  .ring text { font-size: 9.4px; } /* the ring shrinks with the badge, so the letters are drawn a touch larger */
+  .core { width: 38px; height: 38px; }
+  .core svg { width: 20px; height: 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ring { animation: none; }
