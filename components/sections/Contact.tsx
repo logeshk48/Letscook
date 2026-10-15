@@ -104,9 +104,8 @@ export default function Contact() {
 
   const reach = [
     { no: "01", label: "Email", value: site.email, href: `mailto:${site.email}`, ext: false },
-    { no: "02", label: "Call / WhatsApp", value: site.phoneDisplay, href: whatsappLink(), ext: true },
-    { no: "03", label: "Instagram", value: `@${site.instagram}`, href: `https://instagram.com/${site.instagram}`, ext: true },
-    { no: "04", label: "LinkedIn", value: "Let's Cook Technologies", href: site.linkedin, ext: true },
+    { no: "02", label: "Instagram", value: `@${site.instagram}`, href: `https://instagram.com/${site.instagram}`, ext: true },
+    { no: "03", label: "LinkedIn", value: "Let's Cook Technologies", href: site.linkedin, ext: true },
   ];
 
   return (

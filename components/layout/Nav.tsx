@@ -210,7 +210,7 @@ export default function Nav() {
         <div className={s.side}>
           <a className={s.card} href={whatsappLink()} target="_blank" rel="noopener noreferrer" tabIndex={open ? 0 : -1}>
             WhatsApp
-            <b>{site.phoneDisplay}</b>
+            <b>Chat with us ↗</b>
           </a>
           <a className={s.card} href={`mailto:${site.email}`} tabIndex={open ? 0 : -1}>
             Email
