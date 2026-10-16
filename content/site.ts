@@ -154,6 +154,7 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  { kind: "AI Ads", title: "Café Menu Launch Ads", image: "/work/ads.webp", text: "AI-made reels, feed posts and stories for a café's new monsoon menu, finished by hand to match the brand.", results: ["12 ad variants", "Reel, feed & story sizes"], glyph: "AI", metricLabel: "Creatives", metricValue: "12 ads" },
   { kind: "Web application", title: "Retail Billing Dashboard", image: "/work/billing.webp", text: "Inventory, invoicing and daily sales reporting for a multi-branch retail store.", results: ["Billing time cut by 60%", "Live stock across 3 branches"], glyph: "₹", metricLabel: "Billing time", metricValue: "−60%" },
   { kind: "Android & iOS", title: "Campus Events App", image: "/work/events.webp", text: "Event discovery, registration and QR check-in built for a college community.", results: ["2,400+ registrations", "Paperless check-in"], glyph: "QR", metricLabel: "Registrations", metricValue: "2,400+" },
   { kind: "Website", title: "Studio Portfolio Site", image: "/work/portfolio.webp", text: "A fast, image-heavy portfolio with a CMS the owner updates without calling us.", results: ["1.2s load time", "Self-managed content"], glyph: "1.2s", metricLabel: "Load time", metricValue: "1.2s" },
