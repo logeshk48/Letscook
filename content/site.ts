@@ -60,6 +60,12 @@ export const services: Service[] = [
     points: ["Wireframes & prototypes", "Design systems", "Usability-first layouts"],
   },
   {
+    name: "AI Ads",
+    tag: "Scroll-stopping creatives",
+    text: "Ad videos, product visuals and social creatives made with AI and finished by people, so they look on-brand and are ready to run.",
+    points: ["AI video & image ads", "Copy that matches your brand", "Sized for Instagram, YouTube & Meta"],
+  },
+  {
     name: "Student projects",
     tag: "Final year, done right",
     text: "End-to-end academic project support: a working build, clean documentation and a walkthrough so you can defend it confidently.",
@@ -78,6 +84,7 @@ export const marqueeItems = [
   "Android & iOS apps",
   "Web applications",
   "UI / UX design",
+  "AI ads",
   "E-commerce",
   "Dashboards",
   "API integrations",
@@ -169,4 +176,4 @@ export const faqs = [
   { q: "What happens after launch?", a: "Every project includes a support window for bug fixes. After that you can continue on a simple monthly maintenance plan or just call us when you need changes." },
 ];
 
-export const needOptions = ["Website", "Mobile App", "Web Application", "UI / UX Design", "Student Project", "Something else"];
+export const needOptions = ["Website", "Mobile App", "Web Application", "UI / UX Design", "AI Ads", "Student Project", "Something else"];
