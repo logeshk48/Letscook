@@ -8,7 +8,7 @@ import { projects, whatsappLink } from "@/content/site";
 import s from "./Work.module.css";
 
 /** One accent per project for the result screen. */
-const TINTS = ["#e0457b", "#ff5a1f", "#4d8bd1", "#ffb547", "#7ee2a8", "#c9a7ff", "#ff7a59"];
+const TINTS = ["#e8914a", "#ff5a1f", "#4d8bd1", "#ffb547", "#7ee2a8", "#c9a7ff", "#ff7a59"];
 
 /**
  * Work, told like a product page:
